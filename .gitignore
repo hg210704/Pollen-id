@@ -1,0 +1,9 @@
+__pycache__/
+.pytest_cache/
+.venv/
+runs/
+data_cache/
+paldat_images/
+synthetic_data/
+debug/
+*.pt

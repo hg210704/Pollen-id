@@ -1,0 +1,63 @@
+# ---------------------------------------------------------------------------
+# Pollen ID configuration. Every value can be overridden from the command line:
+#   python scripts/train.py --set train.epochs_finetune=20 --set model.backbone=tf_efficientnetv2_s
+# Relative paths are resolved from the project folder (the one holding this file).
+# ---------------------------------------------------------------------------
+paths:
+  cache_dir: data_cache        # splits.csv, label_map.json, validation report
+  runs_dir: runs               # one sub-folder per training run
+
+data:
+  root: C:/paldat/paldat_images/LM                     # <root>/<Genus_species>/<Genus_species>_LM_<n>.jpg
+  metadata_csv: C:/paldat/paldat_images/metadata.csv   # genus, species, caption, image_url, page_url, file
+  image_size: 384
+  min_image_side: 32           # smaller images are rejected as broken
+  val_fraction: 0.15
+  test_fraction: 0.15
+  seed: 42
+  # Species with only ONE specimen record cannot be evaluated honestly (all their images
+  # come from the same specimen). If true they are split by image instead, which leaks
+  # near-identical images between train and test and gives OPTIMISTIC numbers.
+  image_level_split_for_single_record: true
+  num_workers: 2
+  # Synthetic images (scripts/make_synthetic.py): variants of TRAIN photos only, added to training only.
+  use_synthetic: true
+  synthetic_target_per_species: 12   # top each species up to about this many training images
+  synthetic_max_per_source: 6        # at most this many variants of any single photo
+
+model:
+  backbone: convnext_tiny      # compare: tf_efficientnetv2_s, convnext_tiny, deit_small_patch16_224
+  pretrained: true             # downloads ImageNet weights on first use (needs internet)
+  drop_rate: 0.2
+
+train:
+  seed: 42
+  epochs_frozen: 3             # stage 1: only the two heads learn
+  epochs_finetune: 40          # stage 2: whole network learns (cosine schedule)
+  warmup_epochs: 1
+  batch_size: 16
+  lr_head: 1.0e-3
+  lr_backbone: 1.0e-4
+  weight_decay: 0.05
+  label_smoothing: 0.1
+  genus_loss_weight: 0.5
+  balanced_sampler: true       # draw rare species more often
+  class_weights: false         # alternative to the sampler (do not combine)
+  mixup_alpha: 0.0             # e.g. 0.2 to enable
+  cutmix_alpha: 0.0            # e.g. 1.0 to enable
+  # Early stopping: stop when the validation loss has not improved by min_delta for `patience`
+  # epochs, and keep the weights of the best epoch (not the last one).
+  early_stopping_metric: val_loss    # or val_accuracy
+  early_stopping_patience: 6
+  early_stopping_min_delta: 0.002
+  amp: true                    # mixed precision (GPU only)
+  grad_clip: 1.0
+
+eval:
+  tta_views: 8                 # 1, 4 (rotations) or 8 (rotations + flips)
+  target_genus_acc: 0.90
+  target_species_acc: 0.90
+  selective_accuracy: 0.95     # accuracy wanted on the answers the model does give
+  min_coverage: 0.60           # ...while still answering at least this share of images
+  default_threshold: 0.50
+  gradcam_samples: 12

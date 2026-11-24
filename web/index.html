@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pollen ID</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="top">
+    <div class="top-in">
+      <a class="brand" href="#/predict" aria-label="Pollen ID home">
+        <svg class="brand-grain" viewBox="0 0 40 40" aria-hidden="true">
+          <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+            <circle cx="20" cy="20" r="8"/>
+            <path d="M20 5v4M20 31v4M5 20h4M31 20h4M9.4 9.4l2.8 2.8M27.8 27.8l2.8 2.8M30.6 9.4l-2.8 2.8M12.2 27.8l-2.8 2.8"/>
+          </g>
+          <circle cx="20" cy="20" r="2.4" fill="var(--pollen)"/>
+        </svg>
+        <span>Pollen ID</span>
+      </a>
+      <nav class="nav" aria-label="Main">
+        <a href="#/predict" data-route="predict">Identify</a>
+        <a href="#/training" data-route="training">Training</a>
+        <a href="#/compare" data-route="compare">Compare</a>
+        <a href="#/evaluation" data-route="evaluation">Evaluation</a>
+        <a href="#/dataset" data-route="dataset">Dataset</a>
+        <a href="#/models" data-route="models">Models</a>
+        <a href="#/about" data-route="about">About</a>
+      </nav>
+      <span id="active-model" class="model-tag">No model loaded</span>
+    </div>
+  </header>
+  <main id="main" tabindex="-1"></main>
+  <footer class="site-foot">
+    Images and names from <a href="https://www.paldat.org" target="_blank" rel="noopener">PalDat</a>, the Palynological Database. For personal study only; please do not redistribute the images.
+  </footer>
+  <script src="vendor/chart.umd.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
